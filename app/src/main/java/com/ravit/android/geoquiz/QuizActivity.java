@@ -1,7 +1,9 @@
 package com.ravit.android.geoquiz;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,12 +14,14 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
-public class QuizActivity extends AppCompatActivity {
+public class QuizActivity extends Activity {
+
+    private static final String TAG = "QuizActivity";
+    private static final String KEY_INDEX = "index";
 
     private Button mTrueButton;
     private Button mFalseButton;
-    private ImageButton mNextButton;
-    private ImageButton mPrevButton;
+    private Button mNextButton;
     private TextView mQuestionTextView;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[] {
@@ -64,11 +68,12 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        Log.d(TAG, "Start Geo Quiz");
+
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
         mTrueButton = (Button)findViewById(R.id.true_button);
         mFalseButton = (Button)findViewById(R.id.false_button);
-        mNextButton = (ImageButton)findViewById(R.id.next_button);
-        mPrevButton = (ImageButton)findViewById(R.id.prev_button);
+        mNextButton = (Button)findViewById(R.id.next_button);
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,14 +103,45 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-        mPrevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View V) {
-                prevQuestion();
-            }
-        });
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            Log.d(TAG, Integer.toString(mCurrentIndex));
+        }
 
         updateQuestion();
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
     }
 
     @Override
