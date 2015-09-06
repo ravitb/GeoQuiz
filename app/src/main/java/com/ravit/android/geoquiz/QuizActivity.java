@@ -2,23 +2,20 @@ package com.ravit.android.geoquiz;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class QuizActivity extends Activity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_CHEATER = "cheater";
 
     private boolean mIsCheater;
 
@@ -48,7 +45,7 @@ public class QuizActivity extends Activity {
 
         int messageResId = 0;
 
-        if (mIsCheater) {
+        if (mQuestionBank[mCurrentIndex].isCheater()) {
             messageResId = R.string.judgment_toast;
         } else {
             if (userPressedTrue == answerIsTrue) {
@@ -62,13 +59,8 @@ public class QuizActivity extends Activity {
     }
 
     private void nextQuestion() {
+        mQuestionBank[mCurrentIndex].setCheater(mIsCheater);
         mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-        mIsCheater = false;
-        updateQuestion();
-    }
-
-    private void prevQuestion() {
-        mCurrentIndex = ((mCurrentIndex - 1) % mQuestionBank.length > 0) ? ((mCurrentIndex - 1) % mQuestionBank.length) : (mQuestionBank.length - 1);
         mIsCheater = false;
         updateQuestion();
     }
@@ -126,6 +118,8 @@ public class QuizActivity extends Activity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheater = savedInstanceState.getBoolean(KEY_CHEATER, false);
+            mQuestionBank[mCurrentIndex].setCheater(mIsCheater);
             Log.d(TAG, Integer.toString(mCurrentIndex));
         }
 
@@ -139,6 +133,7 @@ public class QuizActivity extends Activity {
         }
 
         mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+        mQuestionBank[mCurrentIndex].setCheater(mIsCheater);
     }
 
     @Override
@@ -146,6 +141,7 @@ public class QuizActivity extends Activity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
     }
 
 

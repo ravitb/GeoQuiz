@@ -5,8 +5,8 @@ package com.ravit.android.geoquiz;
  */
 public class TrueFalse {
     private int mQuestion;
-
     private boolean mTrueQuestion;
+    private boolean mCheater;
 
     public TrueFalse(int question, boolean trueQuestion) {
         mQuestion = question;
@@ -27,5 +27,13 @@ public class TrueFalse {
 
     public void setTrueQuestion(boolean trueQuestion) {
         mTrueQuestion = trueQuestion;
+    }
+
+    public boolean isCheater() {
+        return mCheater;
+    }
+
+    public void setCheater(boolean cheater) {
+        mCheater = cheater;
     }
 }
